@@ -19,7 +19,6 @@ int readCameras();
 
 // Global variables
 const int CAMNUM = 1;           // Number of cameras in total
-const int FRAMEWINDOW = 15;     // Windowsize in frames for segmentation & tracking
 Mat im[CAMNUM];                 // Array of images taken from each camera
 
 string BASH_SCRIPT_DIR = "/Users/hawaii/Code/dRec/dRec/";
@@ -65,7 +64,7 @@ int main(int argc, const char * argv[])
     
     
     
-    cout << "Hello, World!\n" << CAMNUM << "\n" << FRAMEWINDOW <<"\n";
+    cout << "Hello, World!\n" << "\n";
     return 0;
 }
 
