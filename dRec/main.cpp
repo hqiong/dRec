@@ -18,9 +18,11 @@ using namespace std;
 int readCameras();
 
 // Global variables
-const int CAMNUM = 3;           // Number of cameras in total
+const int CAMNUM = 1;           // Number of cameras in total
 const int FRAMEWINDOW = 15;     // Windowsize in frames for segmentation & tracking
 Mat im[CAMNUM];                 // Array of images taken from each camera
+
+string BASH_SCRIPT_DIR = "/Users/hawaii/Code/dRec/dRec/";
 
 const bool debug = true;        // Display debug info if true
 
@@ -74,8 +76,9 @@ int main(int argc, const char * argv[])
 //  Effects: Saves an image from each camera locally then read into global variable im
 //
 int readCameras(){
-    // Run bask script to save captures from cameras to local
-    system("./imFromCams1.sh");
+    // Run bash script to save captures from cameras to local
+    string bash_script = BASH_SCRIPT_DIR + "imFromCams1.sh";
+    system(bash_script.c_str());
     
     if (debug){
         cout << "Finished running bash script.\n";
@@ -91,20 +94,20 @@ int readCameras(){
     // Check for invalid input
     for (int i = 0; i < CAMNUM; i++){
         if(!im[i].data ){
-            cout <<  "Could not open or find the image " << i << std::endl;
+            cout <<  "Could not open or find the image" << i <<"; check number of cameras CAMNUM " << std::endl;
             return -1;
         } else {
             if (debug){
                 // Display image for debug purpose
                 namedWindow( "Display window", WINDOW_AUTOSIZE );   // Create a window for display.
                 imshow( "Display window", im[i] );                  // Show our image inside it.
-            
+                
                 waitKey(0);                                         // Wait for a keystroke in the window
             }
         }
         
     }
-    
+
     return 0;
 }
 
