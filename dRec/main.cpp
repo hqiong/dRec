@@ -5,17 +5,39 @@
 //  Author: Yi Hua & Zhenyu Guo
 //  Copyright (c) 2014 Rice University. All rights reserved.
 //
-
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <cstdio>
+#include <cstdlib>
 #include <iostream>
 
+using namespace cv;
+using namespace std;
+
+// Function declarations
+int readCameras();
+
+// Global variables
+const int CAMNUM = 3;           // Number of cameras in total
+const int FRAMEWINDOW = 15;     // Windowsize in frames for segmentation & tracking
+Mat im[CAMNUM];                 // Array of images taken from each camera
+
+const bool debug = true;        // Display debug info if true
+
+//
+// Main routine for counting number of people in the scene
+//
 int main(int argc, const char * argv[])
 {
-    
-    const int CAMNUM = 3;           // Number of cameras in total
-    const int FRAMEWINDOW = 15;     // Windowsize in frames for segmentation & tracking
+    int error = 0;
     
     /* SETUP PHASE */
     /* Read views from cameras; camera 0 is taken as the reference view */
+    if ((error = readCameras()) != 0){
+        return error;
+    }
+    // Display images for debug purpose
+    
     
     /* Synchronize camera 1,...,CAMNUM to camera 0 */
     
@@ -41,7 +63,48 @@ int main(int argc, const char * argv[])
     
     
     
-    std::cout << "Hello, World!\n" << CAMNUM << "\n" << FRAMEWINDOW <<"\n";
+    cout << "Hello, World!\n" << CAMNUM << "\n" << FRAMEWINDOW <<"\n";
+    return 0;
+}
+
+//
+//  Read an image from each camera by running a bash script
+//
+//  Requires: cam_num - number of cameras in total: a positive number
+//  Effects: Saves an image from each camera locally then read into global variable im
+//
+int readCameras(){
+    // Run bask script to save captures from cameras to local
+    system("./imFromCams1.sh");
+    
+    if (debug){
+        cout << "Finished running bash script.\n";
+        //waitKey(0);
+    }
+    
+    // Read in the local pictures
+    for (int i = 0; i < CAMNUM; i++){
+        string imname = to_string(i) + ".jpg";
+        im[i] = imread(imname, CV_LOAD_IMAGE_COLOR);
+    }
+    
+    // Check for invalid input
+    for (int i = 0; i < CAMNUM; i++){
+        if(!im[i].data ){
+            cout <<  "Could not open or find the image " << i << std::endl;
+            return -1;
+        } else {
+            if (debug){
+                // Display image for debug purpose
+                namedWindow( "Display window", WINDOW_AUTOSIZE );   // Create a window for display.
+                imshow( "Display window", im[i] );                  // Show our image inside it.
+            
+                waitKey(0);                                         // Wait for a keystroke in the window
+            }
+        }
+        
+    }
+    
     return 0;
 }
 
