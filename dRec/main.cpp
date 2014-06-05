@@ -18,7 +18,7 @@ using namespace std;
 int readCameras();
 
 // Global variables
-const int CAMNUM = 1;           // Number of cameras in total
+const int CAMNUM = 2;           // Number of cameras in total
 Mat im[CAMNUM];                 // Array of images taken from each camera
 
 string BASH_SCRIPT_DIR = "/Users/hawaii/Code/dRec/dRec/";
@@ -86,7 +86,7 @@ int readCameras(){
     
     // Read in the local pictures
     for (int i = 0; i < CAMNUM; i++){
-        string imname = to_string(i) + ".jpg";
+        string imname = BASH_SCRIPT_DIR + to_string(i) + ".jpg";
         im[i] = imread(imname, CV_LOAD_IMAGE_COLOR);
     }
     
